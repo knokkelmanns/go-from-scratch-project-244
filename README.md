@@ -13,16 +13,32 @@
 
 ## Установка
 
-<!-- Опишите установку: клонирование, зависимости, переменные окружения -->
-
 ```bash
 git clone https://github.com/knokkelmanns/go-from-scratch-project-244.git
 cd go-from-scratch-project-244
+make build
 ```
 
 ## Использование
 
-<!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
+```bash
+./bin/gendiff testdata/fixture/file1.json testdata/fixture/file2.json
+```
+
+```
+{
+  - follow: false
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 50
+  + timeout: 20
+  + verbose: true
+}
+```
+
+### Сравнение плоских JSON-файлов
+
+[![asciicast](https://asciinema.org/a/ld27wMIzbczC8etT.svg)](https://asciinema.org/a/ld27wMIzbczC8etT)
 
 ---
 
