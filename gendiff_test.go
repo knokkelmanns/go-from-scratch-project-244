@@ -85,8 +85,19 @@ func TestGenDiffJSON(t *testing.T) {
 	}
 }
 
+func writeTempFile(t *testing.T, name, content string) string {
+	t.Helper()
+
+	path := filepath.Join(t.TempDir(), name)
+	require.NoError(t, os.WriteFile(path, []byte(content), 0o600))
+
+	return path
+}
+
 func TestGenDiffEmptyFiles(t *testing.T) {
-	got, err := GenDiff(fixturePath("empty.json"), fixturePath("empty.json"), "stylish")
+	path := writeTempFile(t, "empty.json", "{}")
+
+	got, err := GenDiff(path, path, "stylish")
 	require.NoError(t, err)
 	assert.Equal(t, "{\n}", got)
 }
@@ -103,27 +114,30 @@ func TestGenDiffAbsolutePaths(t *testing.T) {
 }
 
 func TestGenDiffErrors(t *testing.T) {
+	valid := fixturePath("nested1.json")
+	missing := filepath.Join(t.TempDir(), "missing.json")
+
 	tests := []struct {
 		name  string
 		file1 string
 		file2 string
 	}{
-		{"first file missing", "missing.json", "file2.json"},
-		{"second file missing", "file1.json", "missing.json"},
-		{"invalid json", "invalid.json", "file2.json"},
-		{"invalid yaml", "file1.yml", "invalid.yml"},
-		{"unsupported format", "file.txt", "file2.json"},
+		{"first file missing", missing, valid},
+		{"second file missing", valid, missing},
+		{"invalid json", writeTempFile(t, "invalid.json", `{"host": `), valid},
+		{"invalid yaml", valid, writeTempFile(t, "invalid.yml", "host: [hexlet.io\n")},
+		{"unsupported format", writeTempFile(t, "file.txt", "host=hexlet.io"), valid},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := GenDiff(fixturePath(tt.file1), fixturePath(tt.file2), "stylish")
+			_, err := GenDiff(tt.file1, tt.file2, "stylish")
 			require.Error(t, err)
 		})
 	}
 }
 
 func TestGenDiffUnknownFormat(t *testing.T) {
-	_, err := GenDiff(fixturePath("file1.json"), fixturePath("file2.json"), "xml")
+	_, err := GenDiff(fixturePath("nested1.json"), fixturePath("nested2.json"), "xml")
 	require.Error(t, err)
 }

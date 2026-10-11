@@ -14,13 +14,32 @@ func fixturePath(name string) string {
 
 func TestParseFile(t *testing.T) {
 	expected := map[string]any{
-		"host":    "hexlet.io",
-		"timeout": float64(50),
-		"proxy":   "123.234.53.22",
-		"follow":  false,
+		"group3": map[string]any{
+			"deep": map[string]any{
+				"id": map[string]any{"number": float64(45)},
+			},
+			"fee": float64(100500),
+		},
+		"group1": map[string]any{
+			"foo":  "bar",
+			"baz":  "bars",
+			"nest": "str",
+		},
+		"common": map[string]any{
+			"follow":   false,
+			"setting1": "Value 1",
+			"setting3": nil,
+			"setting4": "blah blah",
+			"setting5": map[string]any{"key5": "value5"},
+			"setting6": map[string]any{
+				"key":  "value",
+				"ops":  "vops",
+				"doge": map[string]any{"wow": "so much"},
+			},
+		},
 	}
 
-	for _, name := range []string{"file1.json", "file1.yml"} {
+	for _, name := range []string{"nested2.json", "nested2.yml"} {
 		t.Run(name, func(t *testing.T) {
 			got, err := ParseFile(fixturePath(name))
 			require.NoError(t, err)
@@ -70,10 +89,26 @@ func TestParseEmptyYAML(t *testing.T) {
 	assert.Empty(t, got)
 }
 
-func TestParseFileErrors(t *testing.T) {
-	for _, name := range []string{"missing.json", "invalid.json", "invalid.yml", "list.yml", "file.txt"} {
-		t.Run(name, func(t *testing.T) {
-			_, err := ParseFile(fixturePath(name))
+func TestParseFileMissing(t *testing.T) {
+	_, err := ParseFile(filepath.Join(t.TempDir(), "missing.json"))
+	require.Error(t, err)
+}
+
+func TestParseErrors(t *testing.T) {
+	tests := []struct {
+		name    string
+		content string
+		ext     string
+	}{
+		{"invalid json", `{"host": `, ".json"},
+		{"invalid yaml", "host: [hexlet.io\n", ".yml"},
+		{"yaml list instead of map", "- host\n- timeout\n", ".yml"},
+		{"unsupported format", "host=hexlet.io", ".txt"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := Parse([]byte(tt.content), tt.ext)
 			require.Error(t, err)
 		})
 	}
