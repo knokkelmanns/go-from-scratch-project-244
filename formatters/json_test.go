@@ -9,9 +9,8 @@ import (
 	"code/diff"
 )
 
-const expectedJSON = `[
-  {
-    "key": "added",
+const expectedJSON = `{
+  "added": {
     "type": "added",
     "value": {
       "a": 12345,
@@ -20,37 +19,32 @@ const expectedJSON = `[
       }
     }
   },
-  {
-    "key": "group",
+  "group": {
     "type": "nested",
-    "children": [
-      {
-        "key": "empty",
+    "children": {
+      "empty": {
         "type": "changed",
         "oldValue": "",
         "newValue": "so much"
       },
-      {
-        "key": "list",
+      "list": {
         "type": "changed",
         "oldValue": [
           1
         ],
         "newValue": null
       },
-      {
-        "key": "same",
+      "same": {
         "type": "unchanged",
         "value": true
       }
-    ]
+    }
   },
-  {
-    "key": "removed",
+  "removed": {
     "type": "removed",
     "value": 1.5
   }
-]`
+}`
 
 func TestJSON(t *testing.T) {
 	got, err := JSON(tree)
@@ -61,7 +55,7 @@ func TestJSON(t *testing.T) {
 func TestJSONEmpty(t *testing.T) {
 	got, err := JSON(nil)
 	require.NoError(t, err)
-	assert.Equal(t, "[]", got)
+	assert.Equal(t, "{}", got)
 }
 
 func TestJSONNoHTMLEscape(t *testing.T) {

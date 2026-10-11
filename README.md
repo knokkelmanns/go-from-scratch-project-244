@@ -116,20 +116,19 @@ Property 'group3' was added with value: [complex value]
 ./bin/gendiff --format json testdata/fixture/nested1.json testdata/fixture/nested2.json
 ```
 
-Выводит дерево диффа массивом узлов. У каждого узла есть `key` и `type` (`added`, `removed`, `unchanged`, `changed`, `nested`); в зависимости от типа добавляется `value`, пара `oldValue`/`newValue` или `children`.
+Выводит дерево диффа объектом, где ключи — имена свойств. У каждого узла есть `type` (`added`, `removed`, `unchanged`, `changed`, `nested`); в зависимости от типа добавляется `value`, пара `oldValue`/`newValue` или `children`.
 
 ```json
-[
-  {
-    "key": "common",
+{
+  "common": {
     "type": "nested",
-    "children": [
-      { "key": "follow", "type": "added", "value": false },
-      { "key": "setting3", "type": "changed", "oldValue": true, "newValue": null }
-    ]
+    "children": {
+      "follow": { "type": "added", "value": false },
+      "setting3": { "type": "changed", "oldValue": true, "newValue": null }
+    }
   },
-  { "key": "group2", "type": "removed", "value": { "abc": 12345, "deep": { "id": 45 } } }
-]
+  "group2": { "type": "removed", "value": { "abc": 12345, "deep": { "id": 45 } } }
+}
 ```
 
 ---
