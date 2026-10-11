@@ -9,6 +9,7 @@ import (
 	"code/diff"
 )
 
+// JSON renders tree as an indented JSON object keyed by property name.
 func JSON(tree []diff.Node) (string, error) {
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
