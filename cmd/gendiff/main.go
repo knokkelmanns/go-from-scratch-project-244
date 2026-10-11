@@ -1,3 +1,4 @@
+// Command gendiff compares two configuration files and shows a difference.
 package main
 
 import (
@@ -22,7 +23,7 @@ func main() {
 				Value:   "stylish",
 			},
 		},
-		Action: func(ctx context.Context, cmd *cli.Command) error {
+		Action: func(_ context.Context, cmd *cli.Command) error {
 			if cmd.NArg() != 2 {
 				return cli.ShowAppHelp(cmd)
 			}

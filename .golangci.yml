@@ -1,0 +1,16 @@
+version: "2"
+
+linters:
+  enable:
+    - errorlint
+    - gocritic
+    - misspell
+    - revive
+    - testifylint
+    - unconvert
+    - whitespace
+
+formatters:
+  enable:
+    - gofmt
+    - goimports

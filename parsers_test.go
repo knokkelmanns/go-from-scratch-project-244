@@ -1,33 +1,38 @@
 package code
 
 import (
-	"path/filepath"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParseFileJSON(t *testing.T) {
-	got, err := ParseFile(filepath.Join("testdata", "fixture", "file1.json"))
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	got, err := ParseFile(fixturePath("file1.json"))
+	require.NoError(t, err)
 
-	want := map[string]any{
+	expected := map[string]any{
 		"host":    "hexlet.io",
 		"timeout": float64(50),
 		"proxy":   "123.234.53.22",
 		"follow":  false,
 	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %v, want %v", got, want)
-	}
+	assert.Equal(t, expected, got)
 }
 
-func TestParseFileErrors(t *testing.T) {
-	if _, err := ParseFile(filepath.Join("testdata", "fixture", "missing.json")); err == nil {
-		t.Error("expected error for missing file")
-	}
-	if _, err := Parse([]byte("a: 1"), ".txt"); err == nil {
-		t.Error("expected error for unsupported format")
-	}
+func TestParseJSON(t *testing.T) {
+	got, err := Parse([]byte(`{"a": 1}`), ".json")
+	require.NoError(t, err)
+	assert.Equal(t, map[string]any{"a": float64(1)}, got)
+}
+
+func TestParseErrors(t *testing.T) {
+	_, err := ParseFile(fixturePath("missing.json"))
+	require.Error(t, err)
+
+	_, err = Parse([]byte(`{"a": `), ".json")
+	require.Error(t, err)
+
+	_, err = Parse([]byte("a: 1"), ".txt")
+	require.Error(t, err)
 }

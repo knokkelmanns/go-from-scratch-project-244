@@ -1,3 +1,4 @@
+// Package code builds the difference between two configuration files.
 package code
 
 import (
@@ -9,6 +10,10 @@ import (
 
 // GenDiff returns the difference between two files in the given format.
 func GenDiff(filepath1, filepath2, format string) (string, error) {
+	if format != "stylish" {
+		return "", fmt.Errorf("unknown format: %q", format)
+	}
+
 	data1, err := ParseFile(filepath1)
 	if err != nil {
 		return "", err

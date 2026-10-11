@@ -1,6 +1,7 @@
 # Вычислитель отличий на Go
 
 [![hexlet-check](https://github.com/knokkelmanns/go-from-scratch-project-244/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/knokkelmanns/go-from-scratch-project-244/actions)
+[![ci](https://github.com/knokkelmanns/go-from-scratch-project-244/actions/workflows/ci.yml/badge.svg)](https://github.com/knokkelmanns/go-from-scratch-project-244/actions/workflows/ci.yml)
 
 Консольная утилита для сравнения вложенных структур (JSON, YAML)
 
@@ -17,6 +18,14 @@
 git clone https://github.com/knokkelmanns/go-from-scratch-project-244.git
 cd go-from-scratch-project-244
 make build
+```
+
+## Разработка
+
+```bash
+make test           # тесты
+make lint           # линтер (golangci-lint)
+make test-coverage  # покрытие, падает если ниже COVERAGE_MIN (по умолчанию 80%)
 ```
 
 ## Использование
