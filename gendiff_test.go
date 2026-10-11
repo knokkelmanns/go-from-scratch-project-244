@@ -65,6 +65,26 @@ func TestGenDiffPlain(t *testing.T) {
 	}
 }
 
+func TestGenDiffJSON(t *testing.T) {
+	tests := []struct {
+		name  string
+		file1 string
+		file2 string
+	}{
+		{"json files", "nested1.json", "nested2.json"},
+		{"yaml files", "nested1.yml", "nested2.yml"},
+	}
+
+	expected := readFixture(t, "expected_json.json")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GenDiff(fixturePath(tt.file1), fixturePath(tt.file2), "json")
+			require.NoError(t, err)
+			assert.JSONEq(t, expected, got)
+		})
+	}
+}
+
 func TestGenDiffEmptyFiles(t *testing.T) {
 	got, err := GenDiff(fixturePath("empty.json"), fixturePath("empty.json"), "stylish")
 	require.NoError(t, err)

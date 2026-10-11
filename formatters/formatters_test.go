@@ -30,6 +30,7 @@ func TestFormat(t *testing.T) {
 		{"", expectedStylish},
 		{"stylish", expectedStylish},
 		{"plain", expectedPlain},
+		{"json", expectedJSON},
 	}
 
 	for _, tt := range tests {

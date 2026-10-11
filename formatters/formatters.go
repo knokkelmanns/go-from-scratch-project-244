@@ -21,6 +21,8 @@ func Format(tree []diff.Node, format string) (string, error) {
 		return Stylish(tree), nil
 	case "plain":
 		return Plain(tree), nil
+	case "json":
+		return JSON(tree)
 	default:
 		return "", fmt.Errorf("unknown format: %q", format)
 	}

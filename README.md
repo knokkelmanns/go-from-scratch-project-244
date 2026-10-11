@@ -7,7 +7,6 @@
 
 Учебный проект Хекслета: https://ru.hexlet.io/programs/go-from-scratch
 
-
 ## Стек
 
 - Go
@@ -30,39 +29,66 @@ make test-coverage  # покрытие, падает если ниже COVERAGE_
 
 ## Использование
 
-Поддерживаемые форматы входных файлов: JSON (`.json`) и YAML (`.yml`, `.yaml`). Форматы можно смешивать.
+```bash
+./bin/gendiff [--format stylish|plain|json] <file1> <file2>
+```
+
+Поддерживаемые форматы входных файлов: JSON (`.json`) и YAML (`.yml`, `.yaml`), их можно смешивать. Формат вывода по умолчанию — `stylish`.
+
+[![asciicast](https://asciinema.org/a/N84afidljTWFz2D0.svg)](https://asciinema.org/a/N84afidljTWFz2D0)
+
+### Формат stylish
 
 ```bash
-./bin/gendiff testdata/fixture/file1.json testdata/fixture/file2.json
-./bin/gendiff testdata/fixture/file1.yml testdata/fixture/file2.yaml
+./bin/gendiff testdata/fixture/nested1.json testdata/fixture/nested2.yml
 ```
 
 ```
 {
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
+    common: {
+      + follow: false
+        setting1: Value 1
+      - setting2: 200
+      - setting3: true
+      + setting3: null
+      + setting4: blah blah
+      + setting5: {
+            key5: value5
+        }
+        setting6: {
+            doge: {
+              - wow: 
+              + wow: so much
+            }
+            key: value
+          + ops: vops
+        }
+    }
+    group1: {
+      - baz: bas
+      + baz: bars
+        foo: bar
+      - nest: {
+            key: value
+        }
+      + nest: str
+    }
+  - group2: {
+        abc: 12345
+        deep: {
+            id: 45
+        }
+    }
+  + group3: {
+        deep: {
+            id: {
+                number: 45
+            }
+        }
+        fee: 100500
+    }
 }
 ```
-
-### Сравнение плоских JSON-файлов
-
-[![asciicast](https://asciinema.org/a/ld27wMIzbczC8etT.svg)](https://asciinema.org/a/ld27wMIzbczC8etT)
-
-### Сравнение плоских YAML-файлов
-
-[![asciicast](https://asciinema.org/a/ASCIINEMA_ID.svg)](https://asciinema.org/a/ASCIINEMA_ID)
-
-### Рекурсивное сравнение (формат stylish)
-
-```bash
-./bin/gendiff testdata/fixture/nested1.json testdata/fixture/nested2.json
-```
-
-[![asciicast](https://asciinema.org/a/ASCIINEMA_NESTED_ID.svg)](https://asciinema.org/a/ASCIINEMA_NESTED_ID)
 
 ### Формат plain
 
@@ -84,7 +110,27 @@ Property 'group2' was removed
 Property 'group3' was added with value: [complex value]
 ```
 
-[![asciicast](https://asciinema.org/a/ASCIINEMA_PLAIN_ID.svg)](https://asciinema.org/a/ASCIINEMA_PLAIN_ID)
+### Формат json
+
+```bash
+./bin/gendiff --format json testdata/fixture/nested1.json testdata/fixture/nested2.json
+```
+
+Выводит дерево диффа массивом узлов. У каждого узла есть `key` и `type` (`added`, `removed`, `unchanged`, `changed`, `nested`); в зависимости от типа добавляется `value`, пара `oldValue`/`newValue` или `children`.
+
+```json
+[
+  {
+    "key": "common",
+    "type": "nested",
+    "children": [
+      { "key": "follow", "type": "added", "value": false },
+      { "key": "setting3", "type": "changed", "oldValue": true, "newValue": null }
+    ]
+  },
+  { "key": "group2", "type": "removed", "value": { "abc": 12345, "deep": { "id": 45 } } }
+]
+```
 
 ---
 
