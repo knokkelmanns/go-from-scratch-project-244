@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"code"
+	"code/formatters"
 
 	"github.com/urfave/cli/v3"
 )
@@ -20,7 +21,7 @@ func main() {
 				Name:    "format",
 				Aliases: []string{"f"},
 				Usage:   "output format",
-				Value:   "stylish",
+				Value:   formatters.DefaultFormat,
 			},
 		},
 		Action: func(_ context.Context, cmd *cli.Command) error {
